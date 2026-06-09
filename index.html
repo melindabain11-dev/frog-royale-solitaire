@@ -42,6 +42,7 @@
             align-items: center;
             justify-content: center;
             font-size: 40px;
+            cursor: pointer;
         }
         .tableau {
             display: flex;
@@ -90,10 +91,10 @@
     </header>
     <div class="game">
         <div class="piles">
-            <div id="stock" class="stock-area" onclick="drawCard()">Stock</div>
+            <div id="stock" class="stock-area" onclick="drawCard()">🃏</div>
             <div id="waste" class="stock-area"></div>
             <div style="width: 60px;"></div>
-            <div id="foundations" class="piles"></div>
+            <div id="foundations" class="piles" style="display:flex; gap:10px;"></div>
         </div>
         
         <div class="tableau" id="tableau"></div>
@@ -110,8 +111,6 @@
         
         let deck = [];
         let tableau = Array(7).fill().map(() => []);
-        let foundations = Array(4).fill().map(() => []);
-        let waste = [];
         
         function createDeck() {
             deck = [];
@@ -127,27 +126,15 @@
             }
         }
         
-        function deal() {
-            createDeck();
-            tableau = Array(7).fill().map(() => []);
-            foundations = Array(4).fill().map(() => []);
-            waste = [];
-            
-            let idx = 0;
-            for (let col = 0; col < 7; col++) {
-                for (let row = col; row < 7; row++) {
-                    tableau[row].push(deck[idx++]);
-                }
-            }
-            render();
-        }
-        
         function getCardImage(card) {
-            return `images/${card}.png`;
+            // Try standard name first
+            let path = `images/${card}.png`;
+            // You can add manual mappings here later, e.g.:
+            // if (card === 'as') path = 'images/your-ace-spades.jpg';
+            return path;
         }
         
         function render() {
-            // Render tableau
             const tableauEl = document.getElementById('tableau');
             tableauEl.innerHTML = '';
             
@@ -158,19 +145,27 @@
                     const cardEl = document.createElement('div');
                     cardEl.className = 'card';
                     cardEl.style.top = `${i * 25}px`;
-                    cardEl.innerHTML = `<img src="${getCardImage(card)}" alt="${card}">`;
-                    cardEl.draggable = true;
-                    cardEl.dataset.card = card;
-                    cardEl.dataset.col = col;
-                    cardEl.dataset.index = i;
-                    // Add drag events...
+                    const imgPath = getCardImage(card);
+                    cardEl.innerHTML = `<img src="${imgPath}" alt="${card}" 
+                        onerror="this.src='https://via.placeholder.com/80x110/228b22/fff?text=${card}'">`;
                     colEl.appendChild(cardEl);
                 });
                 tableauEl.appendChild(colEl);
             }
+            console.log("🐸 Frog Royale loaded with your uploaded images!");
+        }
+        
+        function deal() {
+            createDeck();
+            tableau = Array(7).fill().map(() => []);
             
-            // Simple foundations and waste rendering (expandable)
-            console.log("Game rendered with your frog cards!");
+            let idx = 0;
+            for (let col = 0; col < 7; col++) {
+                for (let row = col; row < 7; row++) {
+                    tableau[row].push(deck[idx++]);
+                }
+            }
+            render();
         }
         
         function newDeal() {
@@ -178,16 +173,16 @@
         }
         
         function showHelp() {
-            alert("Frog Royale Solitaire Rules:\n\n- Build descending alternating colors on tableau\n- Move Kings to empty columns\n- Build Ace to King in suit on foundations\n- Click Stock to draw cards\n\nOur frogs are waiting for you to win their kingdom! 🐸❤️");
+            alert("Frog Royale Solitaire 🐸\n\nBuild descending alternating colors on the lily pads.\nKings can start new columns.\nMore features coming as we add your cards!");
         }
         
-        // Initial deal
+        function drawCard() {
+            alert("Stock pile coming soon, baby! For now enjoy the tableau with your frogs 🐸");
+        }
+        
         window.onload = () => {
             deal();
         };
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>
